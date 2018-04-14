@@ -1,0 +1,45 @@
+body {
+    background-color: lightblue;
+    margin-right: 0px;
+}
+
+/*div {
+    height: 200px;
+    width: 50%;
+    background-color: powderblue;
+}*/
+
+#datavis{
+	height:920px;
+	width:77%;
+	margin-top: 20px;
+	float:right;
+	background-color: black;
+}
+
+#text{
+	height:550px;
+	width:21%;
+	
+	margin-top: 20px;
+	
+	background-color: black;
+}
+
+#secondarydatavis{
+	height:350px;
+	width:21%;
+	float:left;
+	background-color: black;
+	margin-top: 20px;
+}
+article { 
+    display: block;
+    margin-left: 20px;
+}
+
+div {
+    height: 100px;
+    width: 500px;
+    background-color: powderblue;
+}
