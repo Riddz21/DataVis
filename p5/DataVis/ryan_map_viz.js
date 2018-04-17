@@ -157,7 +157,7 @@ function drawCobaltFlowNetwork(x,y,w,h) {
 
 	// STYLE PARAMETERS
 	var low = 1; // smallest line weight
-	var high = 20; // biggest line weight
+	var high = 24; // biggest line weight
 	var opacity = 120;
 	var r = 0;
 	var g = 80;
@@ -185,9 +185,9 @@ function drawCobaltFlowNetwork(x,y,w,h) {
 			var amt = mapper(kilotons, 500,8000,low,high);
 			
 			// FIXME: finish gradient line function -- the line is just temporary
-			//drawGradientLine(amt, origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
+			 drawGradientLine(amt, origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
 			 strokeWeight(amt);
-			 line(origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
+			 //line(origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
 		}
 		
 	}
@@ -204,16 +204,18 @@ function mapper(value, min, max, low, high) {
 // function for drawing gradient line between countries
 //    UNFINISHED
 function drawGradientLine(weight, startX, startY, endX, endY) {
-	var startColor = color(0,0,255);
-	var endColor = color(255,255,255);
+	var startColor = color(72,172,216, 60);
+	var endColor = color(255, 60);
 
 	var d = dist(startX,startY,endX, endY);
 	var theta = asin((endY-startY) / d);
 
+	if (((startY >  endY) && (startX > endX)) || ((startY <  endY) && (startX > endX))) { theta = PI - theta; }
+
 	noStroke();
 
-	for (var i = 0; i < dist(startX,startY,endX, endY); i++) {
-		fill(lerpColor(startColor, endColor, i/dist));
+	for (var i = 0; i < d; i++) {
+		fill(lerpColor(startColor, endColor, i/d));
 		ellipse(startX + i*cos(theta), startY + i*sin(theta), weight, weight);
 	}
 }
