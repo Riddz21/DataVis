@@ -204,7 +204,7 @@ function mapper(value, min, max, low, high) {
 // function for drawing gradient line between countries
 //    UNFINISHED
 function drawGradientLine(weight, startX, startY, endX, endY) {
-	var startColor = color(72,172,216, 60);
+	var startColor = color(72,172,206, 60);
 	var endColor = color(255, 60);
 
 	var d = dist(startX,startY,endX, endY);
