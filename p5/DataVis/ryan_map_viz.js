@@ -188,7 +188,6 @@ function drawCobaltFlowNetwork(x,y,w,h) {
 		if (origin != null && destination != null) {
 			var amt = mapper(kilotons, 500,8000,low,high);
 			
-			// FIXME: finish gradient line function -- the line is just temporary
 			 drawGradientLine(amt, origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
 			 strokeWeight(amt);
 			 //line(origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
@@ -196,6 +195,25 @@ function drawCobaltFlowNetwork(x,y,w,h) {
 		
 	}
 
+	// draw legend
+	fill(255);
+	noStroke();
+	triangle(w/12, h*(1/2), w/12, h*(3/4), w/12-w/60, h*(3/4));
+	fill(72,172,206, 255);
+	triangle(w/12, h*(1/2), w/12, h*(3/4), w/12+w/60, h*(3/4));
+
+	textAlign(CENTER);
+	text("Export", w/12 + w/20 ,h*(5/8))
+	fill(255);
+	text("Import", w/12 - w/20 ,h*(5/8))
+
+	fill(lerpColor(color(255), color(72,172,206), 0.5));
+	text("8,000 tons", w/12, h*(3/4)+h/25);
+	text("0 tons", w/12, h/2 - h/50);
+
+	textSize(31);
+	fill(255);
+	text("Global Material Flow of Cobalt", w/2, -h/100);
 
 	pop();
 }
