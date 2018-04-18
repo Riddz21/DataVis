@@ -144,7 +144,7 @@ function drawBubbles(x,y,w,h) {
 	// popup text style parameters
 	textAlign(CENTER);
 	fill(255);
-	strokeWeight(.5);
+	strokeWeight(2);
 	stroke(50);
 
 	// display quantities for hovering mouse
