@@ -8,6 +8,9 @@
     width: 50%;
     background-color: powderblue;
 }*/
+body{
+	font-family: 'Source Sans Pro', sans-serif;
+}
 
 #datavis{
 	height:920px;

@@ -2,7 +2,7 @@ var map;
 var countryLocations, flowData, lithiumMining, cobaltMining; // data tables
 var minFlow, maxFlow = null; // variables to store min and max quantities from flow data
 
-var popUpFont;
+//var popUpFont;
 
 function preload() {
 	// load map picture
@@ -14,11 +14,13 @@ function preload() {
 	cobaltMining = loadTable('cobalt-mine-production-2017.csv', 'csv', 'header');
 	// load font
 	//popUpFont = loadFont("VarelaRound-Regular.ttf");
+
 }
 
 function setup() {
   createCanvas(1880,1000);
  // textFont(popUpFont);
+ textFont('Source+Sans+Pro');
  
 }
 
@@ -27,13 +29,14 @@ function draw() {
   noFill();
   stroke(255);
   strokeWeight(4);
-  rect(25,25,400,520);
-  rect(25,575,400,320);
+  
+   rect(25,25,400,875);
   rect(475,25,1375,875)
  //drawBubbles(550,100,1300,800);
  fill(255);
+ textSize(30);
  noStroke();
-  text('Lithium Ion batteries of course contain lithium but also rely on other elements to make them work. Among these elements is Cobalt. Cobalt is of particular interest due to where and how it is sounced.',70,70,300,400);
+  text(' According to a report by CitiBank, sales of Lithium Ion batteries for Electric Vehicles is expected to reach $10 Billion by the year 2020. ',70,70,300,400);
   //drawCobaltFlowNetwork(500,75,1300,800);
 }
 

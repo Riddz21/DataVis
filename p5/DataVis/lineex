@@ -1,0 +1,22 @@
+var homeRuns = [];
+function preload() {
+stats = loadTable("ortiz.csv");
+}
+function setup() {
+createCanvas(800, 600);
+textFont("Muli");
+var rowCount = stats.getRowCount();
+homeRuns = [];
+for (var i = 0; i < rowCount; i++) {
+homeRuns[i] = stats.getNum(i, 1);
+}
+}
+function draw() {
+background(27);
+// Draw background grid for data
+strokeWeight(1);
+stroke(100);
+for (var i = 0; i < homeRuns.length; i++) {
+var x = map(i, 0, homeRuns.length-1, 20, 780);
+line(x, 20, x, 500);
+}

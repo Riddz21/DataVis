@@ -7,7 +7,7 @@ var popUpFont;
 function preload() {
 	// load map picture
 	map = loadImage("map.png");
-	
+	man = loadImage("man.png");
 	// load data files
 	countryLocations = loadTable('country_map_locations.csv', 'csv', 'header');
 	flowData = loadTable('cobalt-flow-2005.csv', 'csv', 'header');
@@ -21,9 +21,7 @@ function setup() {
   createCanvas(1880,1000);
  // textFont(popUpFont);
  textFont("Prompt");
- textAlign(CENTER);
- textSize(25);
-  
+ 
 }
 
 function draw() {
@@ -32,13 +30,22 @@ function draw() {
   stroke(255);
   strokeWeight(4);
    rect(25,25,400,875);
- // rect(25,575,400,320);
-  
- drawBubbles(500,75,1300,800);
+
+beginShape();
+vertex(550, 2010*0.1);
+vertex(600, 2828*0.1);
+vertex(650, 3486*0.1);
+vertex(700, 4422*0.1);
+endShape();
+   image(man,30,500,396,306);
+ //drawBubbles(550,1000,1300,800);
+
  fill(255);
  strokeWeight(0.1);
-  text('Lithium Ion batteries contain lithium, but also rely on other elements to make them work, like Cobalt. Cobalt is of particular interest due to where and how it is sounced. As you can see on the map a surprising 50% of the world supply of Cobalt comes from the small country of Democratic Republic of Congo. ',70,70,300,900);
-  //drawCobaltFlowNetwork(550,100,1300,800);
+ textSize(25);
+ textAlign(CENTER);
+  text('When we look at the network of Cobalt flows it becomes obvious this is a global issue. We propose the start of a new conversation regarding responsible sourcing of Cobalt and protection for people in areas like the Democratic Republic of Congo. ',70,70,300,900);
+ // drawCobaltFlowNetwork(500,75,1300,800);
 }
 
 function drawMap(x,y,w,h) {
