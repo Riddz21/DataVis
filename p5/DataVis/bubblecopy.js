@@ -1,5 +1,5 @@
 var map;
-var countryLocations, flowData, lithiumMining, cobaltMining; // data tables
+var countryLocations, flowData, lithiumMining, cobaltMining, nickelMining; // data tables
 var minFlow, maxFlow = null; // variables to store min and max quantities from flow data
 
 var popUpFont;
@@ -7,12 +7,13 @@ var popUpFont;
 function preload() {
 	// load map picture
 	map = loadImage("map.png");
-	man = loadImage("head.png");
+	pic = loadImage("throw.png")
 	// load data files
 	countryLocations = loadTable('country_map_locations.csv', 'csv', 'header');
 	flowData = loadTable('cobalt-flow-2005.csv', 'csv', 'header');
 	lithiumMining = loadTable('lithium-mine-production-2017.csv', 'csv', 'header');
 	cobaltMining = loadTable('cobalt-mine-production-2017.csv', 'csv', 'header');
+	nickelMining = loadTable('nickel-mine-production-2017.csv', 'csv', 'header');
 	// load font
 	//popUpFont = loadFont("VarelaRound-Regular.ttf");
 }
@@ -20,8 +21,10 @@ function preload() {
 function setup() {
   createCanvas(1880,1000);
  // textFont(popUpFont);
- textFont("Prompt");
- 
+ //blendMode(REPLACE);
+ textFont('Prompt');
+ textSize(25);
+  
 }
 
 function draw() {
@@ -29,15 +32,14 @@ function draw() {
   noFill();
   stroke(255);
   strokeWeight(4);
-   rect(25,25,400,875);
-   image(man,30,500,396,306);
- //drawBubbles(550,1000,1300,800);
+   rect(25,25,400,873);
+   image(pic,30,500,396,306);
+  
+ drawBubbles(500,75,1300,800);
  fill(255);
- strokeWeight(0.1);
- textSize(25);
- textAlign(LEFT);
-  text('When we look at the network of Cobalt flows it becomes obvious this is a global issue. We propose the start of a new conversation regarding responsible sourcing of Cobalt and protection for people in areas like the Democratic Republic of Congo. ',70,70,300,900);
-  drawCobaltFlowNetwork(500,75,1300,800);
+ noStroke();
+  text('Lithium Ion batteries of course contain lithium but also rely on other elements to make them work. Among these elements is Cobalt. Cobalt is of particular interest due to where and how it is sounced.',70,70,300,400);
+  //drawCobaltFlowNetwork(550,100,1300,800);
 }
 
 function drawMap(x,y,w,h) {
@@ -67,21 +69,31 @@ function drawBubbles(x,y,w,h) {
 	var lithiumR = 0;
 	var lithiumG = 255;
 	var lithiumB = 0;
-	var lithiumO = 120; // opacity
+	var lithiumO = 180; // opacity
 	// cobalt color values
 	var cobaltR = 0;
 	var cobaltG = 0;
 	var cobaltB = 255;
-	var cobaltO = 120; // opacity
+	var cobaltO = 180; // opacity
 
+	var nickelR = 255;
+	var nickelG = 0;
+	var nickelB = 0;
+	var nickelO = 180; // opacity
+
+	
 	var activeCountries = []; // array to store all the active countries for interactivity
 
 	push();
 	translate(x,y);
 	drawMap(0,0,w,h);
 
-	noStroke();
-	fill(lithiumR, lithiumG, lithiumB, lithiumO);
+	strokeWeight(8);
+	//noFill();
+	//blendMode(REPLACE);
+
+	stroke(lithiumR, lithiumG, lithiumB, lithiumO);
+	fill(lithiumR, lithiumG, lithiumB, lithiumO/4);
 
 	// draw bubbles for lithium countries
 	for (var i = 0; i < lithiumMining.getRowCount(); i++) {
@@ -98,7 +110,26 @@ function drawBubbles(x,y,w,h) {
 	
 	}
 
-	fill(cobaltR, cobaltG, cobaltB, cobaltO);
+	stroke(nickelR, nickelG, nickelB, nickelO);
+	fill(nickelR, nickelG, nickelB, nickelO/4);
+
+	// draw bubbles for nickel countries
+	for (var i = 0; i < nickelMining.getRowCount(); i++) {
+		var row = nickelMining.getRow(i);
+		var country = countryLocations.findRow(row.getString('Country'), 'Country');
+
+		// add to active country list for interactivity
+		activeCountries.push(country);
+		
+		var size = mapper(row.getNum('Percentage'), 0, .5, low, high);
+		if (country != null) {
+			ellipse(country.getNum(1)*w, country.getNum(2)*h, size,size);
+		}
+	
+	}
+
+	stroke(cobaltR, cobaltG, cobaltB, cobaltO);
+	fill(cobaltR, cobaltG, cobaltB, cobaltO/4);
 
 	// draw bubbles for cobalt countries
 	for (var j = 0; j < cobaltMining.getRowCount(); j++) {
@@ -117,32 +148,47 @@ function drawBubbles(x,y,w,h) {
 	// popup text style parameters
 	textAlign(CENTER);
 	fill(255);
+	strokeWeight(2);
+	stroke(50);
 
 	// display quantities for hovering mouse
 	for (var c = 0; c < activeCountries.length; c++) {
 		if (activeCountries[c] != null) {
-			if (dist(mouseX,mouseY,activeCountries[c].getNum('x')*w,activeCountries[c].getNum('y')*h) < 15) {
+			if (dist(mouseX,mouseY,activeCountries[c].getNum('x')*w + x,activeCountries[c].getNum('y')*h + y) < 15) {
 				
+				// array to store quantities
+				var yields = [];
+
 				textSize(h/25);
 				text(activeCountries[c].getString('Country'), activeCountries[c].getNum('x')*w, activeCountries[c].getNum('y')*h);
 
-				textSize(h/37); // reduce text size for subtitle
+				textSize(h/40); // reduce text size for subtitle
 				var cobaltQ = cobaltMining.findRow(activeCountries[c].getString('Country'), 'Country');
 				if (cobaltQ != null) { 
 					cobaltQ = cobaltQ.getNum('Metric Tons'); 
+					yields.push(cobaltQ);
 				}
 				var lithiumQ = lithiumMining.findRow(activeCountries[c].getString('Country'), 'Country');
 				if (lithiumQ != null) { 
 					lithiumQ = lithiumQ.getNum('Tons'); 
+					yields.push(lithiumQ);
+				}
+				var nickelQ = nickelMining.findRow(activeCountries[c].getString('Country'), 'Country');
+				if (nickelQ != null) { 
+					nickelQ = nickelQ.getNum('Tons'); 
+					yields.push(nickelQ);
 				}
 
-				if (cobaltQ != null && lithiumQ != null) {
-					text(lithiumQ + " tons lithium", activeCountries[c].getNum('x')*w, activeCountries[c].getNum('y')*h + h/35);
-					text(cobaltQ + " tons cobalt", activeCountries[c].getNum('x')*w, activeCountries[c].getNum('y')*h + 2*h/35);
-				} else if (cobaltQ != null) {
-					text(cobaltQ + " tons cobalt", activeCountries[c].getNum('x')*w, activeCountries[c].getNum('y')*h + h/35);
-				} else if (lithiumQ != null) {
-					text(lithiumQ + " tons lithium", activeCountries[c].getNum('x')*w, activeCountries[c].getNum('y')*h + h/35);
+				for (var i = 0; i < yields.length; i++) {
+					if (yields[i] == cobaltQ) {
+						text(yields[i] + " tons cobalt", activeCountries[c].getNum('x')*w, activeCountries[c].getNum('y')*h + (i+1)*h/35);
+					}
+					if (yields[i] == lithiumQ) {
+						text(yields[i] + " tons lithium", activeCountries[c].getNum('x')*w, activeCountries[c].getNum('y')*h + (i+1)*h/35);
+					}
+					if (yields[i] == nickelQ) {
+						text(yields[i] + " tons nickel", activeCountries[c].getNum('x')*w, activeCountries[c].getNum('y')*h + (i+1)*h/35);
+					}
 				}
 			
 			}
@@ -161,7 +207,7 @@ function drawCobaltFlowNetwork(x,y,w,h) {
 
 	// STYLE PARAMETERS
 	var low = 1; // smallest line weight
-	var high = 24; // biggest line weight
+	var high = 20; // biggest line weight
 	var opacity = 120;
 	var r = 0;
 	var g = 80;
@@ -189,9 +235,9 @@ function drawCobaltFlowNetwork(x,y,w,h) {
 			var amt = mapper(kilotons, 500,8000,low,high);
 			
 			// FIXME: finish gradient line function -- the line is just temporary
-			 drawGradientLine(amt, origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
+			//drawGradientLine(amt, origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
 			 strokeWeight(amt);
-			 //line(origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
+			 line(origin.getNum(1)*w, origin.getNum(2)*h, destination.getNum(1)*w, destination.getNum(2)*h);
 		}
 		
 	}
@@ -208,22 +254,18 @@ function mapper(value, min, max, low, high) {
 // function for drawing gradient line between countries
 //    UNFINISHED
 function drawGradientLine(weight, startX, startY, endX, endY) {
-	var startColor = color(72,172,206, 60);
-	var endColor = color(255, 60);
+	var startColor = color(0,0,255);
+	var endColor = color(255,255,255);
 
 	var d = dist(startX,startY,endX, endY);
 	var theta = asin((endY-startY) / d);
 
-	if (((startY >  endY) && (startX > endX)) || ((startY <  endY) && (startX > endX))) { theta = PI - theta; }
-
 	noStroke();
 
-	for (var i = 0; i < d; i++) {
-		fill(lerpColor(startColor, endColor, i/d));
+	for (var i = 0; i < dist(startX,startY,endX, endY); i++) {
+		fill(lerpColor(startColor, endColor, i/dist));
 		ellipse(startX + i*cos(theta), startY + i*sin(theta), weight, weight);
 	}
 }
-
-
 
 
